@@ -28,7 +28,7 @@ pub fn timecode_f64(seconds: f64) -> String {
     }
 }
 
-/// Returns the time code up to seconds
+/// Returns the time code, up to seconds, as `1s 012ms 012µs 012345ns`.
 // THINK: sub-second
 pub fn timecode_ns_u64(ns: u64) -> String {
     let (us, ns_rem) = (ns / 1000, ns % 1000);

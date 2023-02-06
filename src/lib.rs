@@ -14,12 +14,14 @@
 #![cfg_attr(feature = "safe", forbid(unsafe_code))]
 #![cfg_attr(not(feature = "std"), no_std)]
 
+/// *(re-exported)*
 pub use time::{Duration, Instant};
 
 mod sleeper;
 pub use sleeper::Sleeper;
 
 #[cfg(feature = "std")]
+#[cfg_attr(docsrs, doc(cfg(feature = "std")))]
 mod timecode;
 #[cfg(feature = "std")]
 pub use timecode::{timecode_f64, timecode_ns_u64};

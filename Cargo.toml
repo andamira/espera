@@ -46,3 +46,7 @@ libc = "0.2.137"
 
 [badges]
 maintenance = { status = "experimental" }
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
