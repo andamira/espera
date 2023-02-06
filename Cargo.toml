@@ -1,0 +1,48 @@
+[package]
+name = "espera"
+description = "time management"
+version = "0.0.1"
+edition = "2021"
+rust-version = "1.64.0"
+resolver = "2"
+authors = ["José Luis Cruz <joseluis@andamira.net>"]
+repository = "https://github.com/andamira/espera"
+documentation = "https://docs.rs/espera"
+license = "MIT OR Apache-2.0"
+include = [
+	"/src/**/*.rs",
+	"/Cargo.toml",
+	"/LICENSE-*",
+	"/README.md",
+]
+categories = ["date-and-time"]
+keywords = ["timecode", "sleep"]
+publish = true
+
+[dependencies]
+log = "0.4.17"
+# itoa = "1.0.3"
+# ftoa = "0.1.1"
+
+instant = { version = "0.1.12", optional = true }
+spin_sleep = "1.1.1"
+time = "0.3.17"
+
+# MAYBE
+# hifitime = "^2.3" Precise date and time handling https://github.com/nyx-space/hifitime
+# aion = "0.2.0" #  utility crate for duration and datetime # https://github.com/jk-gan/aion
+# sn_fake_clock = "0.4.6" # deterministic testing https://github.com/maidsafe/sn_fake_clock
+
+[features]
+default = ["std", "safe"]
+std = []
+safe = []
+
+wasm = ["instant"]
+
+[dev-dependencies]
+chrono = "0.4.22"
+libc = "0.2.137"
+
+[badges]
+maintenance = { status = "experimental" }
