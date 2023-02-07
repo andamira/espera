@@ -37,6 +37,7 @@ time = "0.3.17"
 default = ["std", "safe"]
 std = []
 safe = []
+nightly = []
 
 wasm = ["instant"]
 
@@ -49,4 +50,3 @@ maintenance = { status = "experimental" }
 
 [package.metadata.docs.rs]
 all-features = true
-rustdoc-args = ["--cfg", "docsrs"]

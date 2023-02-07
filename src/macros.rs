@@ -3,10 +3,12 @@
 //!
 //
 
-/// `std::thread::`[`sleep`][std::thread::sleep] with briefer syntax.
+/// Briefer `std::thread::`[`sleep`][std::thread::sleep].
 ///
 /// Sleeps for `$ns` seconds + `$ms` milliseconds + `$us` microseconds + `$ns` nanoseconds
 #[macro_export]
+#[cfg(feature = "std")]
+#[cfg_attr(nightly, doc(cfg(feature = "std")))]
 macro_rules! sleep4 {
     ($s:expr) => {
         std::thread::sleep(std::time::Duration::from_secs($s));

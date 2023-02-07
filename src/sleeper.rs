@@ -3,6 +3,8 @@
 //!
 //
 
+#![cfg_attr(not(feature = "std"), allow(unused))]
+
 use spin_sleep::{SpinSleeper, SpinStrategy};
 
 use crate::{Duration, Instant};
@@ -82,7 +84,7 @@ impl Sleeper {
     /// extra_nanos: the extra nanoseconds to add to the final value.
     #[inline]
     #[cfg(feature = "std")]
-    #[cfg_attr(docsrs, doc(cfg(feature = "std")))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "std")))]
     pub fn calculate_accuracy(&mut self, num_samples: u32, extra_nanos: u32) {
         let mut durations = vec![];
 
@@ -99,7 +101,7 @@ impl Sleeper {
     // amount of time possible, using native sleep function.
     #[inline]
     #[cfg(feature = "std")]
-    #[cfg_attr(docsrs, doc(cfg(feature = "std")))]
+    #[cfg_attr(nightly, doc(cfg(feature = "std")))]
     fn sample_sleep_accuracy() -> Duration {
         let start = Instant::now();
         std::thread::sleep(Duration::MICROSECOND.unsigned_abs());
