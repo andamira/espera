@@ -7,7 +7,10 @@
 
 use spin_sleep::{SpinSleeper, SpinStrategy};
 
-use crate::{Duration, Instant};
+use crate::Duration;
+
+#[cfg(feature = "std")]
+use crate::Instant;
 
 /// Sleep control structure.
 #[derive(Clone, Copy, Debug, Default)]
@@ -101,7 +104,7 @@ impl Sleeper {
     // amount of time possible, using native sleep function.
     #[inline]
     #[cfg(feature = "std")]
-    #[cfg_attr(nightly, doc(cfg(feature = "std")))]
+    #[cfg_attr(feature = "nightly", doc(cfg(feature = "std")))]
     fn sample_sleep_accuracy() -> Duration {
         let start = Instant::now();
         std::thread::sleep(Duration::MICROSECOND.unsigned_abs());

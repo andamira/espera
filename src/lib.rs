@@ -15,8 +15,14 @@
 #![cfg_attr(feature = "safe", forbid(unsafe_code))]
 #![cfg_attr(feature = "nightly", feature(doc_cfg))]
 
-/// *(re-exported)*
-pub use time::{Duration, Instant};
+/// (re-exported from [`time`])
+pub use time::Duration;
+
+/// (re-exported from [`time`])
+#[cfg(feature = "std")]
+pub use time::Instant;
+
+mod macros;
 
 mod sleeper;
 pub use sleeper::Sleeper;
@@ -26,5 +32,3 @@ pub use sleeper::Sleeper;
 mod timecode;
 #[cfg(feature = "std")]
 pub use timecode::{timecode_f64, timecode_ns_u64};
-
-mod macros;

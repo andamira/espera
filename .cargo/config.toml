@@ -2,7 +2,6 @@
 
 # CHECK
 cl = "clippy"
-clq = "clippy --quiet"
 
 # CLEAN PACKAGE
 cp = "clean --package"
@@ -23,27 +22,17 @@ nddo = "doc --open --all-features"
 b = "build"
 bb = "build --bin"
 be = "build --example"
-bq = "build --quiet"
 br = "build --release"
-bqb = "build --quiet --bin"
-bqe = "build --quiet --example"
 brb = "build --release --bin"
 bre = "build --release --example"
-brqb = "build --release --quiet --bin"
-brqe = "build --release --quiet --example"
 
 # RUN
 r = "run"
 rb = "run --bin"
 re = "run --example"
-rq = "run --quiet"
 rr = "run --release"
-rqb = "run --quiet --bin"
-rqe = "run --quiet --example"
 rrb = "run --release --bin"
 rre = "run --release --example"
-rrqb = "run --release --quiet --bin"
-rrqe = "run --release --quiet --example"
 
 # TEST
 t = "test"
