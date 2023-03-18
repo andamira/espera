@@ -22,7 +22,11 @@ publish = true
 
 [features]
 default = ["safe", "std"]
-std = ["time/std"]
+#
+std = ["alloc", "time/std"]
+alloc = []
+no-std = []
+#
 safe = []
 nightly = [] # just for docs
 wasm = ["instant"]
