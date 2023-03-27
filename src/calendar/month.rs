@@ -59,13 +59,13 @@ impl Month {
 }
 
 impl Month {
-    /// Returns the number of days of each month.
+    /// Returns the number of days of each month,
+    /// takes into account whether it's a `leap` year.
     ///
-    /// It doesn't take into account leap years.
-    pub const fn days(&self) -> u8 {
+    pub const fn days(&self, leap: bool) -> u8 {
         match self {
             January => 31,
-            February => 28, // leap year 29 days
+            February => 28 + leap as u8,
             March => 31,
             April => 30,
             May => 31,
@@ -122,12 +122,12 @@ impl Month {
     /// Returns the month number from January being 1.
     #[inline(always)]
     pub const fn number(self) -> u8 {
-        self.index() + 1
+        self.index() as u8 + 1
     }
 
     /// Returns the month index from January being 0.
     #[inline]
-    pub const fn index(self) -> u8 {
+    pub const fn index(self) -> usize {
         self as _
     }
 

@@ -88,24 +88,24 @@ impl Weekday {
     /// Returns the weekday number from Monday being 1.
     #[inline(always)]
     pub const fn number_from_monday(self) -> u8 {
-        self.index_from_monday() + 1
+        self.index_from_monday() as u8 + 1
     }
 
     /// Returns the weekday number from Sunday being 1.
     #[inline(always)]
     pub const fn number_from_sunday(self) -> u8 {
-        self.index_from_sunday() + 1
+        self.index_from_sunday() as u8 + 1
     }
 
     /// Returns the weekday index from Monday being 0.
     #[inline(always)]
-    pub const fn index_from_monday(self) -> u8 {
+    pub const fn index_from_monday(self) -> usize {
         self as _
     }
 
     /// Returns the weekday index from Sunday being 0.
     #[inline]
-    pub const fn index_from_sunday(self) -> u8 {
+    pub const fn index_from_sunday(self) -> usize {
         match self {
             Monday => 1,
             Tuesday => 2,
