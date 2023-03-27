@@ -28,10 +28,12 @@ pub use time::Duration;
 #[cfg(feature = "std")]
 pub use time::Instant;
 
+pub mod calendar;
 mod macros;
-
 mod sleeper;
 pub use sleeper::Sleeper;
+
+pub use calendar::{Month, Weekday};
 
 #[cfg(feature = "std")]
 #[cfg_attr(feature = "nightly", doc(cfg(feature = "std")))]
