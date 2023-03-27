@@ -58,7 +58,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "chekcout"
-      - uses: actions/checkout@v3
+        uses: actions/checkout@v3
 
       - name: "Install nightly"
         uses: dtolnay/rust-toolchain@nightly
