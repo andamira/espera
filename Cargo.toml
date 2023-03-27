@@ -1,10 +1,9 @@
 [package]
 name = "espera"
 description = "time management"
-version = "0.0.3"
+version = "0.0.4"
 edition = "2021"
 rust-version = "1.64.0"
-resolver = "2"
 authors = ["José Luis Cruz <joseluis@andamira.net>"]
 repository = "https://github.com/andamira/espera"
 documentation = "https://docs.rs/espera"
@@ -15,8 +14,8 @@ include = [
 	"/LICENSE-*",
 	"/README.md",
 ]
-categories = ["date-and-time"]
-keywords = ["timecode", "sleep"]
+categories = ["date-and-time", "no-std"]
+keywords = ["time", "timecode", "sleep", "calendar"]
 publish = true
 
 
