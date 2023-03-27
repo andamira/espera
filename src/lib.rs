@@ -29,10 +29,12 @@ pub use ::time::Instant;
 pub mod calendar;
 mod macros;
 mod sleeper;
+mod unix;
 
 #[doc(inline)]
 pub use calendar::{Month, Weekday};
 pub use sleeper::Sleeper;
+pub use unix::{UnixTime32, UnixTime64};
 
 #[cfg(feature = "std")]
 #[cfg_attr(feature = "nightly", doc(cfg(feature = "std")))]
