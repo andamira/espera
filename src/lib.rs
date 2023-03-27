@@ -1,4 +1,4 @@
-// espera
+// espera::lib
 //
 //! Time management.
 //
@@ -19,19 +19,20 @@ compile_error!("You can't enable the `std` and `no-std` features at the same tim
 #[cfg(feature = "alloc")]
 extern crate alloc;
 
-/// (re-exported from [`time`])
-pub use time::Duration;
+/// (re-exported from the [`time`][::time] crate).
+pub use ::time::Duration;
 
-/// (re-exported from [`time`])
+/// (re-exported from the [`time`][::time] crate).
 #[cfg(feature = "std")]
-pub use time::Instant;
+pub use ::time::Instant;
 
 pub mod calendar;
 mod macros;
 mod sleeper;
-pub use sleeper::Sleeper;
 
+#[doc(inline)]
 pub use calendar::{Month, Weekday};
+pub use sleeper::Sleeper;
 
 #[cfg(feature = "std")]
 #[cfg_attr(feature = "nightly", doc(cfg(feature = "std")))]

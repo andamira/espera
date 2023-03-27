@@ -13,8 +13,8 @@ do = "doc --no-deps --open"
 dd = "doc"
 ddo = "doc --open"
 # +nightly
-nd = "doc --no-deps --all-features"
-ndo = "doc --no-deps --open --all-features"
+nd = "doc --no-deps --features=nightly"
+ndo = "doc --no-deps --open --features=nightly"
 ndd = "doc --all-features"
 nddo = "doc --open --all-features"
 
