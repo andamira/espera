@@ -6,19 +6,316 @@
 use core::{fmt, str::FromStr};
 use Weekday::*;
 
-/// The week days.
-///
-/// Goes from 0 (Monday) to 6 (Sunday).
+/// The days of the week.
 #[repr(u8)]
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub enum Weekday {
+    /// The first day of the week, according to the ISO-8601 standard.
+    ///
+    /// # Etymology
+    /// The name Monday comes from the Old English word “Monandæg”,
+    /// which means “Moon’s day”.
     Monday = 0,
+
+    ///
+    /// # Etymology
+    /// The name Tuesday comes from the Old English word “Tiwesdæg”, which means
+    /// “Tiw’s day”. Tiw was an Anglo-Saxon god associated with war and combat.
     Tuesday,
+
+    ///
+    /// # Etymology
+    /// The name Wednesday comes from the Old English word “Wodnesdæg”, which
+    /// means “Woden’s day”. Woden was the chief god in Norse mythology,
+    /// associated with wisdom, war, and death.
     Wednesday,
+
+    ///
+    /// # Etymology
+    /// The name Thursday comes from the Old English word “Þunresdæg”, which
+    /// means “Thor’s day”. Thor was the Norse god of thunder and lightning.
     Thursday,
+
+    ///
+    /// # Etymology
+    /// The name Friday comes from the Old English word “Frīgedæg”, which means
+    /// “Frige’s day”. Frige was an Anglo-Saxon goddess associated with love,
+    /// fertility, and domestic life.
     Friday,
+
+    ///
+    /// # Etymology
+    /// The name Saturday comes from the Latin word “Saturni dies”, which means
+    /// “Saturn’s day”. Saturn was the Roman god of agriculture and wealth.
     Saturday,
+
+    ///
+    /// # Etymology
+    /// The name Sunday comes from the Old English word “Sunandæg”, which means
+    /// “Sun’s day”.
     Sunday,
+}
+
+impl Weekday {
+    /// The number of weekdays in a week.
+    pub const COUNT: usize = 7;
+
+    /// Returns the previous weekday.
+    #[inline(always)]
+    pub const fn previous(self) -> Weekday {
+        self.previous_nth(1)
+    }
+
+    /// Returns the previous `nth` weekday.
+    #[inline]
+    pub const fn previous_nth(self, nth: usize) -> Weekday {
+        Self::from_monday_index_unchecked(self.index_from_monday().wrapping_sub(nth) % Self::COUNT)
+    }
+
+    /// Returns the next weekday,
+    #[inline(always)]
+    pub const fn next(self) -> Weekday {
+        self.next_nth(1)
+    }
+
+    /// Returns the next `nth` weekday.
+    #[inline]
+    pub const fn next_nth(self, nth: usize) -> Weekday {
+        Self::from_monday_index_unchecked(self.index_from_monday().wrapping_add(nth) % Self::COUNT)
+    }
+
+    /* to number */
+
+    /// Returns the weekday number from `Monday=1` to `Sunday=7`.
+    #[inline(always)]
+    pub const fn number_from_monday(self) -> u8 {
+        self.index_from_monday() as u8 + 1
+    }
+
+    /// Returns the weekday index from `Monday=0` to `Sunday=6`.
+    #[inline(always)]
+    pub const fn index_from_monday(self) -> usize {
+        self as _
+    }
+
+    /// Returns the weekday number from `Sunday=1` to `Monday=7`.
+    #[inline(always)]
+    pub const fn number_from_sunday(self) -> u8 {
+        self.index_from_sunday() as u8 + 1
+    }
+
+    /// Returns the weekday index from `Sunday=0` to `Monday=6`.
+    #[inline]
+    pub const fn index_from_sunday(self) -> usize {
+        match self {
+            Monday => 1,
+            Tuesday => 2,
+            Wednesday => 3,
+            Thursday => 4,
+            Friday => 5,
+            Saturday => 6,
+            Sunday => 0,
+        }
+    }
+
+    /* from number */
+
+    /// Returns a weekday from its counting number, from `Monday=1` to `Sunday=7`.
+    ///
+    /// # Errors
+    /// `if n < 1 || n > 7`
+    #[inline]
+    pub const fn from_monday_number(n: u8) -> Result<Weekday, &'static str> {
+        match n {
+            1 => Ok(Monday),
+            2 => Ok(Tuesday),
+            3 => Ok(Wednesday),
+            4 => Ok(Thursday),
+            5 => Ok(Friday),
+            6 => Ok(Saturday),
+            7 => Ok(Sunday),
+            _ => Err("The weekday number must be between 1 and 7."),
+        }
+    }
+
+    /// Returns a weekday from its index, from `Monday=0` to `Sunday=6`.
+    ///
+    /// # Errors
+    /// `if index > 6`
+    #[inline]
+    pub const fn from_monday_index(index: usize) -> Result<Weekday, &'static str> {
+        match index {
+            0 => Ok(Monday),
+            1 => Ok(Tuesday),
+            2 => Ok(Wednesday),
+            3 => Ok(Thursday),
+            4 => Ok(Friday),
+            5 => Ok(Saturday),
+            6 => Ok(Sunday),
+            _ => Err("The weekday number must be between 0 and 6."),
+        }
+    }
+
+    /// Returns a weekday from its index, from `Monday=0` to `Sunday=6`.
+    ///
+    /// # Panics
+    /// `if index > 6`
+    #[inline]
+    pub const fn from_monday_index_unchecked(index: usize) -> Self {
+        match index {
+            0 => Monday,
+            1 => Tuesday,
+            2 => Wednesday,
+            3 => Thursday,
+            4 => Friday,
+            5 => Saturday,
+            6 => Sunday,
+            _ => panic!("The weekday number must be between 0 and 6."),
+        }
+    }
+
+    /// Returns a weekday from its counting number, from `Sunday=1` to `Monday=7`.
+    ///
+    /// # Errors
+    /// `if n < 1 || n > 7`
+    #[inline]
+    pub const fn from_sunday_number(n: u8) -> Result<Weekday, &'static str> {
+        match n {
+            1 => Ok(Sunday),
+            2 => Ok(Monday),
+            3 => Ok(Tuesday),
+            4 => Ok(Wednesday),
+            5 => Ok(Thursday),
+            6 => Ok(Friday),
+            7 => Ok(Saturday),
+            _ => Err("The weekday number must be between 1 and 7."),
+        }
+    }
+
+    /// Returns a weekday from its index, from `Sunday=0` to `Monday=6`.
+    ///
+    /// # Errors
+    /// `if index > 6`
+    #[inline]
+    pub const fn from_sunday_index(index: usize) -> Result<Weekday, &'static str> {
+        match index {
+            0 => Ok(Sunday),
+            1 => Ok(Monday),
+            2 => Ok(Tuesday),
+            3 => Ok(Wednesday),
+            4 => Ok(Thursday),
+            5 => Ok(Friday),
+            6 => Ok(Saturday),
+            _ => Err("The weekday number must be between 0 and 6."),
+        }
+    }
+
+    /// Returns a weekday from its index, from `Sunday=0` to `Monday=6`.
+    ///
+    /// # Panics
+    /// `if index > 6`
+    #[inline]
+    pub const fn from_sunday_index_unchecked(index: usize) -> Self {
+        match index {
+            0 => Sunday,
+            1 => Monday,
+            2 => Tuesday,
+            3 => Wednesday,
+            4 => Thursday,
+            5 => Friday,
+            6 => Saturday,
+            _ => panic!("The weekday number must be between 0 and 6."),
+        }
+    }
+}
+
+/// # representations
+impl Weekday {
+    /// Returns the 3-letter abbreviated weekday name, in ASCII, UpperCamelCase.
+    pub fn abbr3(self) -> &'static str {
+        match self {
+            Monday => "Mon",
+            Tuesday => "Tue",
+            Wednesday => "Wed",
+            Thursday => "Thu",
+            Friday => "Fri",
+            Saturday => "Sat",
+            Sunday => "Sun",
+        }
+    }
+    /// Returns the 2-letter abbreviated weekday name, in ASCII, UPPERCASE.
+    pub fn abbr2(self) -> &'static str {
+        match self {
+            Monday => "MO",
+            Tuesday => "TU",
+            Wednesday => "WE",
+            Thursday => "TH",
+            Friday => "FR",
+            Saturday => "SA",
+            Sunday => "SU",
+        }
+    }
+    /// Returns the 1-letter abbreviated weekday name, in ASCII, UPPERCASE.
+    pub fn abbr1(self) -> &'static str {
+        match self {
+            Monday => "M",
+            Tuesday => "T",
+            Wednesday => "W",
+            Thursday => "H",
+            Friday => "F",
+            Saturday => "A",
+            Sunday => "U",
+        }
+    }
+
+    /// Returns the emoji associated to the weekday.
+    ///
+    /// These are: 🌕, 🏹, 🧙, ⚡, 💕, 💰, 🌞.
+    ///
+    /// Full Moon, Bow and Arrow, Mage, Lightning Bolt, Two Hearts, Money Bag,
+    /// and Sun.
+    pub const fn emoji(self) -> char {
+        match self {
+            // Full Moon,
+            Monday => '🌕',
+            // Bow and Arrow.
+            Tuesday => '🏹',
+            // Mage.
+            Wednesday => '🧙',
+            // Lightning Bolt.
+            Thursday => '⚡',
+            // Two Hearts.
+            Friday => '💕',
+            // .
+            Saturday => '💰',
+            // Sun
+            Sunday => '🌞',
+        }
+    }
+
+    /// Returns the planet of Helenistic astrology associated with the weekday.
+    ///
+    /// These are: ☽, ♂, ☿, ♃, ♀, ♄, ☀.
+    ///
+    /// Moon, Mars, Mercury, Jupiter, Venus, Saturn and Sun.
+    pub const fn planet(self) -> char {
+        match self {
+            // Moon.
+            Monday => '☽',
+            // Mars.
+            Tuesday => '♂',
+            // Mercury.
+            Wednesday => '☿',
+            // Jupiter.
+            Thursday => '♃',
+            // Venus.
+            Friday => '♀',
+            // Saturn.
+            Saturday => '♄',
+            // Sun.
+            Sunday => '☀',
+        }
+    }
 }
 
 /// # 3 letter abbreviations.
@@ -50,111 +347,8 @@ impl Weekday {
     pub const W: Weekday = Weekday::Wednesday;
     pub const H: Weekday = Weekday::Thursday;
     pub const F: Weekday = Weekday::Friday;
-    pub const S: Weekday = Weekday::Saturday;
+    pub const A: Weekday = Weekday::Saturday;
     pub const U: Weekday = Weekday::Sunday;
-}
-
-impl Weekday {
-    /// Returns the previous weekday,
-    #[inline]
-    pub const fn previous(&self) -> Weekday {
-        match self {
-            Monday => Sunday,
-            Tuesday => Monday,
-            Wednesday => Tuesday,
-            Thursday => Wednesday,
-            Friday => Thursday,
-            Saturday => Friday,
-            Sunday => Saturday,
-        }
-    }
-
-    /// Returns the next weekday,
-    #[inline]
-    pub const fn next(self) -> Self {
-        match self {
-            Monday => Tuesday,
-            Tuesday => Wednesday,
-            Wednesday => Thursday,
-            Thursday => Friday,
-            Friday => Saturday,
-            Saturday => Sunday,
-            Sunday => Monday,
-        }
-    }
-
-    /* numbers */
-
-    /// Returns the weekday number from Monday being 1.
-    #[inline(always)]
-    pub const fn number_from_monday(self) -> u8 {
-        self.index_from_monday() as u8 + 1
-    }
-
-    /// Returns the weekday number from Sunday being 1.
-    #[inline(always)]
-    pub const fn number_from_sunday(self) -> u8 {
-        self.index_from_sunday() as u8 + 1
-    }
-
-    /// Returns the weekday index from Monday being 0.
-    #[inline(always)]
-    pub const fn index_from_monday(self) -> usize {
-        self as _
-    }
-
-    /// Returns the weekday index from Sunday being 0.
-    #[inline]
-    pub const fn index_from_sunday(self) -> usize {
-        match self {
-            Monday => 1,
-            Tuesday => 2,
-            Wednesday => 3,
-            Thursday => 4,
-            Friday => 5,
-            Saturday => 6,
-            Sunday => 0,
-        }
-    }
-
-    /* abbreviations */
-
-    /// Returns the 3-letter abbreviated weekday name, in ASCII, UpperCamelCase.
-    pub fn abbr3(&self) -> &'static str {
-        match self {
-            Monday => "Mon",
-            Tuesday => "Tue",
-            Wednesday => "Wed",
-            Thursday => "Thu",
-            Friday => "Fru",
-            Saturday => "Sat",
-            Sunday => "Sun",
-        }
-    }
-    /// Returns the 2-letter abbreviated weekday name, in ASCII, uppercase.
-    pub fn abbr2(&self) -> &'static str {
-        match self {
-            Monday => "MO",
-            Tuesday => "TU",
-            Wednesday => "WE",
-            Thursday => "TH",
-            Friday => "FR",
-            Saturday => "SA",
-            Sunday => "SU",
-        }
-    }
-    /// Returns the 1-letter abbreviated weekday name, in ASCII, uppercase.
-    pub fn abbr1(&self) -> &'static str {
-        match self {
-            Monday => "M",
-            Tuesday => "T",
-            Wednesday => "W",
-            Thursday => "H",
-            Friday => "F",
-            Saturday => "S",
-            Sunday => "U",
-        }
-    }
 }
 
 impl fmt::Display for Weekday {
@@ -171,10 +365,12 @@ impl fmt::Display for Weekday {
     }
 }
 
+/// Returns a `Weekday` from a string containing either the full weekday name,
+/// or any of the weekday ASCII abbreviations.
 impl FromStr for Weekday {
     type Err = &'static str;
 
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
+    fn from_str(s: &str) -> Result<Weekday, Self::Err> {
         // full name
         if s.eq_ignore_ascii_case("Monday") {
             Ok(Monday)
