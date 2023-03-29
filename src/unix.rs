@@ -9,12 +9,12 @@
 //
 
 use crate::calendar::{is_leap_year, Month};
-use core::fmt;
+use core::{convert::TryFrom, fmt, num::TryFromIntError};
 
 /// 64-bit Unix time, supporting negative values.
 ///
 /// Stores number of seconds since the Unix Epoch (`1970-01-01 00:00:00 UTC`).
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Clone, Copy, Default, PartialEq, Eq, PartialOrd, Ord)]
 pub struct UnixTime {
     pub seconds: i64,
 }
@@ -24,7 +24,7 @@ pub struct UnixTime {
 /// Stores number of seconds since the Unix Epoch (`1970-01-01 00:00:00 UTC`).
 ///
 /// It can represent time from `1970-01-01_00:00:00` to `2106-02-07_06:28:15`.
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Clone, Copy, Default, PartialEq, Eq, PartialOrd, Ord)]
 pub struct UnixTime32 {
     pub seconds: u32,
 }
@@ -287,6 +287,15 @@ impl fmt::Display for UnixTime {
         write![f, "{y:04}-{m:02}-{d:02}_{h:02}:{min:02}:{s:02}"]
     }
 }
+impl fmt::Debug for UnixTime {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let (y, m, d, h, min, s) = self.to_ymdhms();
+        write![
+            f,
+            "UnixTime {{ {y:04}-{m:02}-{d:02}_{h:02}:{min:02}:{s:02} }}"
+        ]
+    }
+}
 
 impl fmt::Display for UnixTime32 {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -294,3 +303,61 @@ impl fmt::Display for UnixTime32 {
         write![f, "{y:04}-{m:02}-{d:02}_{h:02}:{min:02}:{s:02}"]
     }
 }
+
+impl fmt::Debug for UnixTime32 {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let (y, m, d, h, min, s) = self.to_ymdhms();
+        write![
+            f,
+            "UnixTime32 {{ {y:04}-{m:02}-{d:02}_{h:02}:{min:02}:{s:02} }}"
+        ]
+    }
+}
+
+impl From<UnixTime32> for UnixTime {
+    fn from(ut: UnixTime32) -> UnixTime {
+        UnixTime {
+            seconds: ut.seconds.into(),
+        }
+    }
+}
+
+impl TryFrom<UnixTime> for UnixTime32 {
+    type Error = TryFromIntError;
+
+    fn try_from(ut: UnixTime) -> Result<UnixTime32, Self::Error> {
+        Ok(UnixTime32 {
+            seconds: u32::try_from(ut.seconds)?,
+        })
+    }
+}
+
+// Implements From<primitive> for UnixTime*
+macro_rules! impl_from_prim {
+    // for many
+    ($ut:ty, $($prim:ty),+) => { $( impl_from_prim![@ $ut, $prim]; )+ };
+    (@ $ut:ty, $prim:ty) => {
+        impl From<$prim> for $ut {
+            fn from(seconds: $prim) -> $ut {
+                Self { seconds: seconds.into() }
+            }
+        }
+    };
+}
+impl_from_prim![UnixTime, i64, i32, i16, i8, u32, u16, u8];
+impl_from_prim![UnixTime32, u32, u16, u8];
+
+// Implements TryFrom<primitive> for UnixTime*
+macro_rules! impl_try_from_prim {
+    ($ut:ty, $($prim:ty),+) => { $( impl_try_from_prim![@ $ut, $prim]; )+ };
+    (@ $ut:ty, $prim:ty) => {
+        impl TryFrom<$prim> for $ut {
+            type Error = TryFromIntError;
+            fn try_from(seconds: $prim) -> Result<$ut, Self::Error> {
+                Ok(Self { seconds: seconds.try_into()? })
+            }
+        }
+    };
+}
+impl_try_from_prim![UnixTime, u64, u128, usize, i128, isize];
+impl_try_from_prim![UnixTime32, u64, u128, usize, i8, i16, i32, i64, i128, isize];
