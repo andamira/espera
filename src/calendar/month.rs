@@ -8,7 +8,7 @@ use Month::*;
 
 /// The months.
 #[repr(u8)]
-#[derive(Clone, Copy, PartialEq, Eq, Ord, PartialOrd)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Ord, PartialOrd)]
 pub enum Month {
     January = 0,
     February,
@@ -156,7 +156,7 @@ impl Month {
     }
 }
 
-/// # representations
+/// # abbreviations & representations
 impl Month {
     /// Returns the 3-letter abbreviated month name, in ASCII, UpperCamelCase.
     pub const fn abbr3(self) -> &'static str {
@@ -176,6 +176,19 @@ impl Month {
         }
     }
 
+    pub const Jan: Month = Month::January;
+    pub const Feb: Month = Month::February;
+    pub const Mar: Month = Month::March;
+    pub const Apr: Month = Month::April;
+    pub const May: Month = Month::May;
+    pub const Jun: Month = Month::June;
+    pub const Jul: Month = Month::July;
+    pub const Aug: Month = Month::August;
+    pub const Sep: Month = Month::September;
+    pub const Oct: Month = Month::October;
+    pub const Nov: Month = Month::November;
+    pub const Dec: Month = Month::December;
+
     /// Returns the 2-letter abbreviated month name, in ASCII, UPPERCASE.
     pub const fn abbr2(self) -> &'static str {
         match self {
@@ -194,6 +207,19 @@ impl Month {
         }
     }
 
+    pub const JA: Month = Month::January;
+    pub const FE: Month = Month::February;
+    pub const MR: Month = Month::March;
+    pub const AP: Month = Month::April;
+    pub const MY: Month = Month::May;
+    pub const JN: Month = Month::June;
+    pub const JL: Month = Month::July;
+    pub const AU: Month = Month::August;
+    pub const SE: Month = Month::September;
+    pub const OC: Month = Month::October;
+    pub const NV: Month = Month::November;
+    pub const DE: Month = Month::December;
+
     /// Returns the 1-letter abbreviated month name, in ASCII, UPPERCASE.
     pub const fn abbr1(self) -> &'static str {
         match self {
@@ -211,6 +237,19 @@ impl Month {
             December => "D",
         }
     }
+
+    pub const J: Month = Month::January;
+    pub const F: Month = Month::February;
+    pub const R: Month = Month::March;
+    pub const P: Month = Month::April;
+    pub const Y: Month = Month::May;
+    pub const N: Month = Month::June;
+    pub const L: Month = Month::July;
+    pub const U: Month = Month::August;
+    pub const S: Month = Month::September;
+    pub const O: Month = Month::October;
+    pub const V: Month = Month::November;
+    pub const D: Month = Month::December;
 
     /// Returns the emoji associated to the month.
     ///
@@ -248,7 +287,19 @@ impl Month {
         }
     }
 
-    /// Returns the zodiac symbol associated to the start of the month.
+    /// Returns the main zodiac symbol, associated to the start of the month.
+    ///
+    /// These are: ♑, ♒, ♓, ♈, ♉, ♊, ♋, ♌, ♍, ♎, ♏, ♐.
+    ///
+    /// Capricorn, Aquarius, Pisces, Aries, Taurus, Gemini, Cancer, Leo, Virgo,
+    /// Libra, Scorpio, Sagittarius.
+    ///
+    /// # Examples
+    /// ```
+    /// use espera::Month;
+    ///
+    /// assert_eq![Month::July.zodiac_start(), '♋'];
+    /// ```
     pub const fn zodiac_start(self) -> char {
         match self {
             // Capricorn
@@ -278,58 +329,62 @@ impl Month {
         }
     }
 
-    /// Returns the zodiac symbol associated to the end of the month.
+    /// Returns the main zodiac name, associated to the start of the month.
+    ///
+    /// These are: Capricorn, Aquarius, Pisces, Aries, Taurus, Gemini, Cancer,
+    /// Leo, Virgo, Libra, Scorpio, Sagittarius.
+    ///
+    /// # Examples
+    /// ```
+    /// use espera::Month;
+    ///
+    /// assert_eq![Month::July.zodiac_start_name(), "Cancer"];
+    /// ```
+    pub const fn zodiac_start_name(self) -> &'static str {
+        match self {
+            January => "Capricorn",
+            February => "Aquarius",
+            March => "Pisces",
+            April => "Aries",
+            May => "Taurus",
+            June => "Gemini",
+            July => "Cancer",
+            August => "Leo",
+            September => "Virgo",
+            October => "Libra",
+            November => "Scorpio",
+            December => "Sagittarius",
+        }
+    }
+
+    /// Returns the secondary zodiac symbol, associated to the end of the month.
+    ///
+    /// These are: ♒, ♓, ♈, ♉, ♊, ♋, ♌, ♍, ♎, ♏, ♐, ♑.
+    ///
+    /// # Examples
+    /// ```
+    /// use espera::Month;
+    ///
+    /// assert_eq![Month::July.zodiac_end(), '♌'];
+    /// ```
     pub const fn zodiac_end(self) -> char {
         self.next().zodiac_start()
     }
-}
 
-/// # 3 letter abbreviations.
-impl Month {
-    pub const Jan: Month = Month::January;
-    pub const Feb: Month = Month::February;
-    pub const Mar: Month = Month::March;
-    pub const Apr: Month = Month::April;
-    pub const May: Month = Month::May;
-    pub const Jun: Month = Month::June;
-    pub const Jul: Month = Month::July;
-    pub const Aug: Month = Month::August;
-    pub const Sep: Month = Month::September;
-    pub const Oct: Month = Month::October;
-    pub const Nov: Month = Month::November;
-    pub const Dec: Month = Month::December;
-}
-
-/// # 2 letter abbreviations.
-impl Month {
-    pub const JA: Month = Month::January;
-    pub const FE: Month = Month::February;
-    pub const MR: Month = Month::March;
-    pub const AP: Month = Month::April;
-    pub const MY: Month = Month::May;
-    pub const JN: Month = Month::June;
-    pub const JL: Month = Month::July;
-    pub const AU: Month = Month::August;
-    pub const SE: Month = Month::September;
-    pub const OC: Month = Month::October;
-    pub const NV: Month = Month::November;
-    pub const DE: Month = Month::December;
-}
-
-/// # 1 letter abbreviations.
-impl Month {
-    pub const J: Month = Month::January;
-    pub const F: Month = Month::February;
-    pub const R: Month = Month::March;
-    pub const P: Month = Month::April;
-    pub const Y: Month = Month::May;
-    pub const N: Month = Month::June;
-    pub const L: Month = Month::July;
-    pub const U: Month = Month::August;
-    pub const S: Month = Month::September;
-    pub const O: Month = Month::October;
-    pub const V: Month = Month::November;
-    pub const D: Month = Month::December;
+    /// Returns the secondary zodiac name, associated to the end of the month.
+    ///
+    /// These are: Aquarius, Pisces, Aries, Taurus, Gemini, Cancer, Leo, Virgo,
+    /// Libra, Scorpio, Sagittarius, Capricorn.
+    ///
+    /// # Examples
+    /// ```
+    /// use espera::Month;
+    ///
+    /// assert_eq![Month::July.zodiac_end_name(), "Leo"];
+    /// ```
+    pub const fn zodiac_end_name(self) -> &'static str {
+        self.next().zodiac_start_name()
+    }
 }
 
 impl fmt::Display for Month {

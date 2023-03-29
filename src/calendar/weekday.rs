@@ -8,7 +8,7 @@ use Weekday::*;
 
 /// The days of the week.
 #[repr(u8)]
-#[derive(Clone, Copy, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Weekday {
     /// The first day of the week, according to the ISO-8601 standard.
     ///
@@ -83,7 +83,10 @@ impl Weekday {
     pub const fn next_nth(self, nth: usize) -> Weekday {
         Self::from_monday_index_unchecked(self.index_from_monday().wrapping_add(nth) % Self::COUNT)
     }
+}
 
+/// # from Monday
+impl Weekday {
     /* to number */
 
     /// Returns the weekday number from `Monday=1` to `Sunday=7`.
@@ -97,28 +100,6 @@ impl Weekday {
     pub const fn index_from_monday(self) -> usize {
         self as _
     }
-
-    /// Returns the weekday number from `Sunday=1` to `Monday=7`.
-    #[inline(always)]
-    pub const fn number_from_sunday(self) -> u8 {
-        self.index_from_sunday() as u8 + 1
-    }
-
-    /// Returns the weekday index from `Sunday=0` to `Monday=6`.
-    #[inline]
-    pub const fn index_from_sunday(self) -> usize {
-        match self {
-            Monday => 1,
-            Tuesday => 2,
-            Wednesday => 3,
-            Thursday => 4,
-            Friday => 5,
-            Saturday => 6,
-            Sunday => 0,
-        }
-    }
-
-    /* from number */
 
     /// Returns a weekday from its counting number, from `Monday=1` to `Sunday=7`.
     ///
@@ -171,6 +152,29 @@ impl Weekday {
             5 => Saturday,
             6 => Sunday,
             _ => panic!("The weekday number must be between 0 and 6."),
+        }
+    }
+}
+
+/// # from Sunday
+impl Weekday {
+    /// Returns the weekday number from `Sunday=1` to `Monday=7`.
+    #[inline(always)]
+    pub const fn number_from_sunday(self) -> u8 {
+        self.index_from_sunday() as u8 + 1
+    }
+
+    /// Returns the weekday index from `Sunday=0` to `Monday=6`.
+    #[inline]
+    pub const fn index_from_sunday(self) -> usize {
+        match self {
+            Monday => 1,
+            Tuesday => 2,
+            Wednesday => 3,
+            Thursday => 4,
+            Friday => 5,
+            Saturday => 6,
+            Sunday => 0,
         }
     }
 
@@ -229,7 +233,7 @@ impl Weekday {
     }
 }
 
-/// # representations
+/// # abbreviations & representations
 impl Weekday {
     /// Returns the 3-letter abbreviated weekday name, in ASCII, UpperCamelCase.
     pub fn abbr3(self) -> &'static str {
@@ -243,6 +247,15 @@ impl Weekday {
             Sunday => "Sun",
         }
     }
+
+    pub const Mon: Weekday = Weekday::Monday;
+    pub const Tue: Weekday = Weekday::Tuesday;
+    pub const Wed: Weekday = Weekday::Wednesday;
+    pub const Thu: Weekday = Weekday::Thursday;
+    pub const Fri: Weekday = Weekday::Friday;
+    pub const Sat: Weekday = Weekday::Saturday;
+    pub const Sun: Weekday = Weekday::Sunday;
+
     /// Returns the 2-letter abbreviated weekday name, in ASCII, UPPERCASE.
     pub fn abbr2(self) -> &'static str {
         match self {
@@ -255,6 +268,15 @@ impl Weekday {
             Sunday => "SU",
         }
     }
+
+    pub const MO: Weekday = Weekday::Monday;
+    pub const TU: Weekday = Weekday::Tuesday;
+    pub const WE: Weekday = Weekday::Wednesday;
+    pub const TH: Weekday = Weekday::Thursday;
+    pub const FR: Weekday = Weekday::Friday;
+    pub const SA: Weekday = Weekday::Saturday;
+    pub const SU: Weekday = Weekday::Sunday;
+
     /// Returns the 1-letter abbreviated weekday name, in ASCII, UPPERCASE.
     pub fn abbr1(self) -> &'static str {
         match self {
@@ -268,12 +290,27 @@ impl Weekday {
         }
     }
 
+    pub const M: Weekday = Weekday::Monday;
+    pub const T: Weekday = Weekday::Tuesday;
+    pub const W: Weekday = Weekday::Wednesday;
+    pub const H: Weekday = Weekday::Thursday;
+    pub const F: Weekday = Weekday::Friday;
+    pub const A: Weekday = Weekday::Saturday;
+    pub const U: Weekday = Weekday::Sunday;
+
     /// Returns the emoji associated to the weekday.
     ///
     /// These are: 🌕, 🏹, 🧙, ⚡, 💕, 💰, 🌞.
     ///
     /// Full Moon, Bow and Arrow, Mage, Lightning Bolt, Two Hearts, Money Bag,
     /// and Sun.
+    ///
+    /// # Examples
+    /// ```
+    /// use espera::Weekday;
+    ///
+    /// assert_eq![Weekday::Thursday.emoji(), '⚡'];
+    /// ```
     pub const fn emoji(self) -> char {
         match self {
             // Full Moon,
@@ -293,11 +330,16 @@ impl Weekday {
         }
     }
 
-    /// Returns the planet of Helenistic astrology associated with the weekday.
+    /// Returns the char of the associated planet of Helenistic astrology.
     ///
     /// These are: ☽, ♂, ☿, ♃, ♀, ♄, ☀.
     ///
-    /// Moon, Mars, Mercury, Jupiter, Venus, Saturn and Sun.
+    /// # Examples
+    /// ```
+    /// use espera::Weekday;
+    ///
+    /// assert_eq![Weekday::Thursday.planet(), '♃'];
+    /// ```
     pub const fn planet(self) -> char {
         match self {
             // Moon.
@@ -316,39 +358,28 @@ impl Weekday {
             Sunday => '☀',
         }
     }
-}
 
-/// # 3 letter abbreviations.
-impl Weekday {
-    pub const Mon: Weekday = Weekday::Monday;
-    pub const Tue: Weekday = Weekday::Tuesday;
-    pub const Wed: Weekday = Weekday::Wednesday;
-    pub const Thu: Weekday = Weekday::Thursday;
-    pub const Fri: Weekday = Weekday::Friday;
-    pub const Sat: Weekday = Weekday::Saturday;
-    pub const Sun: Weekday = Weekday::Sunday;
-}
-
-/// # 2 letter abbreviations.
-impl Weekday {
-    pub const MO: Weekday = Weekday::Monday;
-    pub const TU: Weekday = Weekday::Tuesday;
-    pub const WE: Weekday = Weekday::Wednesday;
-    pub const TH: Weekday = Weekday::Thursday;
-    pub const FR: Weekday = Weekday::Friday;
-    pub const SA: Weekday = Weekday::Saturday;
-    pub const SU: Weekday = Weekday::Sunday;
-}
-
-/// # 1 letter abbreviations.
-impl Weekday {
-    pub const M: Weekday = Weekday::Monday;
-    pub const T: Weekday = Weekday::Tuesday;
-    pub const W: Weekday = Weekday::Wednesday;
-    pub const H: Weekday = Weekday::Thursday;
-    pub const F: Weekday = Weekday::Friday;
-    pub const A: Weekday = Weekday::Saturday;
-    pub const U: Weekday = Weekday::Sunday;
+    /// Returns the name of the associated planet of Helenistic astrology.
+    ///
+    /// These are: Moon, Mars, Mercury, Jupiter, Venus, Saturn and Sun.
+    ///
+    /// # Examples
+    /// ```
+    /// use espera::Weekday;
+    ///
+    /// assert_eq![Weekday::Thursday.planet_name(), "Jupiter"];
+    /// ```
+    pub const fn planet_name(self) -> &'static str {
+        match self {
+            Monday => "Moon",
+            Tuesday => "Mars",
+            Wednesday => "Mercury",
+            Thursday => "Jupiter",
+            Friday => "Venus",
+            Saturday => "Saturn",
+            Sunday => "Sun",
+        }
+    }
 }
 
 impl fmt::Display for Weekday {
