@@ -8,6 +8,7 @@
 //!
 //
 
+use crate::calendar::{is_leap_year, Month};
 use core::fmt;
 
 /// 64-bit Unix time, supports negative values.
@@ -26,16 +27,6 @@ pub struct UnixTime64 {
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, PartialOrd, Ord)]
 pub struct UnixTime32 {
     pub seconds: u32,
-}
-
-// A leap year occurs every four years to help synchronize the calendar year
-// with the solar year or the length of time it takes the Earth to complete
-// its orbit around the Sun, which is about 365.25 days. A year is
-// considered a leap year if it is divisible by 4 but not by 100, or if it
-// is divisible by 400.
-#[inline]
-const fn is_leap_year(year: i32) -> bool {
-    (year % 4 == 0 && year % 100 != 0) || year % 400 == 0
 }
 
 impl UnixTime64 {
@@ -82,19 +73,20 @@ impl UnixTime64 {
     /// assert_eq![(1970, 1, 1, 0, 0, 1), UnixTime64::new(1).to_ymdhms()];
     /// assert_eq![(1969, 12, 31, 23, 59, 59), UnixTime64::new(-1).to_ymdhms()];
     /// ```
-    pub const fn to_ymdhms(&self) -> (i32, u32, u32, u32, u32, u32) {
-        let seconds_per_minute = 60;
-        let minutes_per_hour = 60;
-        let hours_per_day = 24;
-        let days_per_year = 365;
+    pub const fn to_ymdhms(&self) -> (i32, u8, u8, u8, u8, u8) {
+        let seconds_per_minute: u32 = 60;
+        let minutes_per_hour: u32 = 60;
+        let hours_per_day: u32 = 24;
+        let days_per_year: u32 = 365;
 
         let mut seconds_left = self.seconds.abs();
         let mut year = if self.seconds >= 0 { 1970 } else { 1969 };
+        let mut leap = is_leap_year(year);
 
         while seconds_left
             >= (hours_per_day * minutes_per_hour * seconds_per_minute * days_per_year) as i64
         {
-            let leap = is_leap_year(year);
+            leap = is_leap_year(year);
             let days_in_year = if leap { 366 } else { 365 };
             seconds_left -=
                 (hours_per_day * minutes_per_hour * seconds_per_minute * days_in_year) as i64;
@@ -106,28 +98,20 @@ impl UnixTime64 {
             }
         }
 
-        let mut month = 1;
-        let month_lengths = if is_leap_year(year) {
-            [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
-        } else {
-            [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
-        };
-
+        let mut month = Month::January;
         while seconds_left
-            >= (hours_per_day
-                * minutes_per_hour
-                * seconds_per_minute
-                * month_lengths[month as usize - 1]) as i64
+            >= (hours_per_day * minutes_per_hour * seconds_per_minute * month.len(leap) as u32)
+                as i64
         {
-            seconds_left -= (hours_per_day
-                * minutes_per_hour
-                * seconds_per_minute
-                * month_lengths[month as usize - 1]) as i64;
-            month += 1;
+            seconds_left -=
+                (hours_per_day * minutes_per_hour * seconds_per_minute * month.len(leap) as u32)
+                    as i64;
+            month = month.next();
         }
 
-        let day =
-            (seconds_left / (hours_per_day * minutes_per_hour * seconds_per_minute) as i64) + 1;
+        let day = (seconds_left / (hours_per_day * minutes_per_hour * seconds_per_minute) as i64)
+            as u8
+            + 1;
         seconds_left %= (hours_per_day * minutes_per_hour * seconds_per_minute) as i64;
 
         let hour = seconds_left / (minutes_per_hour * seconds_per_minute) as i64;
@@ -139,20 +123,20 @@ impl UnixTime64 {
         if self.seconds >= 0 {
             (
                 year,
-                month,
-                day as u32,
-                hour as u32,
-                minute as u32,
-                second as u32,
+                month.number(),
+                day,
+                hour as u8,
+                minute as u8,
+                second as u8,
             )
         } else {
             (
                 year,
-                13 - month,
-                month_lengths[12 - month as usize] - day as u32 + 1,
-                23 - hour as u32,
-                59 - minute as u32,
-                60 - second as u32,
+                13 - month.number(),
+                Month::December.previous_nth(month.index()).len(leap) - day + 1,
+                23 - hour as u8,
+                59 - minute as u8,
+                60 - second as u8,
             )
         }
     }
@@ -173,11 +157,11 @@ impl UnixTime64 {
 
     // Returns the number of seconds since 1970-01-01 00:00:00 UTC.
     //
-    // Because of `u32` this will only work until `06:28:15 UTC on 07 February 2016`.
+    // Because of `u32` this will only work until `06:28:15 UTC on 07 February 2106`.
     #[cfg(all(not(feature = "std"), not(feature = "safe"), feature = "libc"))]
     fn unix_time_64() -> i64 {
         // https://docs.rs/libc/latest/libc/fn.time.html
-        #[allow(clippy::unnecessary_cast)] // could be i32 in other platforms
+        #[allow(clippy::unnecessary_cast)] // could be i32 in other platforms?
         unsafe {
             libc::time(core::ptr::null_mut()) as i64
         }
@@ -225,42 +209,32 @@ impl UnixTime32 {
     /// assert_eq![(1970, 1, 1, 0, 0, 1), UnixTime32::new(1).to_ymdhms()];
     /// assert_eq![(2038, 1, 19, 3, 14, 7), UnixTime32::new(i32::MAX as u32).to_ymdhms()];
     /// ```
-    pub const fn to_ymdhms(&self) -> (u16, u32, u32, u32, u32, u32) {
-        let seconds_per_minute = 60;
-        let minutes_per_hour = 60;
-        let hours_per_day = 24;
-        let days_per_year = 365;
+    pub const fn to_ymdhms(&self) -> (u16, u8, u8, u8, u8, u8) {
+        let seconds_per_minute: u32 = 60;
+        let minutes_per_hour: u32 = 60;
+        let hours_per_day: u32 = 24;
+        let days_per_year: u32 = 365;
 
         let mut seconds_left = self.seconds;
         let mut year = 1970;
+        let mut leap = is_leap_year(year);
 
         while seconds_left
             >= (hours_per_day * minutes_per_hour * seconds_per_minute * days_per_year)
         {
             year += 1;
-            let leap = is_leap_year(year);
+            leap = is_leap_year(year);
             let days_in_year = if leap { 366 } else { 365 };
             seconds_left -= hours_per_day * minutes_per_hour * seconds_per_minute * days_in_year;
         }
 
-        let mut month = 1;
-        let month_lengths = if is_leap_year(year) {
-            [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
-        } else {
-            [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
-        };
-
+        let mut month = Month::January;
         while seconds_left
-            >= (hours_per_day
-                * minutes_per_hour
-                * seconds_per_minute
-                * month_lengths[month as usize - 1])
+            >= hours_per_day * minutes_per_hour * seconds_per_minute * month.len(leap) as u32
         {
-            seconds_left -= hours_per_day
-                * minutes_per_hour
-                * seconds_per_minute
-                * month_lengths[month as usize - 1];
-            month += 1;
+            seconds_left -=
+                hours_per_day * minutes_per_hour * seconds_per_minute * month.len(leap) as u32;
+            month = month.next();
         }
 
         let day = (seconds_left / (hours_per_day * minutes_per_hour * seconds_per_minute)) + 1;
@@ -272,7 +246,14 @@ impl UnixTime32 {
         let minute = seconds_left / seconds_per_minute;
         let second = seconds_left % seconds_per_minute;
 
-        (year as u16, month, day, hour, minute, second)
+        (
+            year as u16,
+            month.number(),
+            day as u8,
+            hour as u8,
+            minute as u8,
+            second as u8,
+        )
     }
 }
 
@@ -280,7 +261,7 @@ impl UnixTime32 {
 impl UnixTime32 {
     // Returns the number of seconds since `1970-01-01 00:00:00 UTC`.
     //
-    // Because of `u32` this will only work until `06:28:15 UTC on 07 February 2016`.
+    // Because of `u32` this will only work until `06:28:15 UTC on 07 February 2106`.
     #[cfg(feature = "std")]
     fn unix_time_32() -> u32 {
         use std::time::SystemTime;
@@ -293,7 +274,7 @@ impl UnixTime32 {
 
     // Returns the number of seconds since 1970-01-01 00:00:00 UTC.
     //
-    // Because of `u32` this will only work until `06:28:15 UTC on 07 February 2016`.
+    // Because of `u32` this will only work until `06:28:15 UTC on 07 February 2106`.
     #[cfg(all(not(feature = "std"), not(feature = "safe"), feature = "libc"))]
     fn unix_time_32() -> u32 {
         unsafe { libc::time(core::ptr::null_mut()).clamp(0, u32::MAX as i64) as u32 }
