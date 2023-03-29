@@ -24,7 +24,7 @@ default = ["safe", "std"]
 #
 std = ["alloc", "time/std", "spin_sleep"]
 alloc = []
-no-std = []
+no-std = ["libm"]
 #
 safe = []
 nightly = [] # just for docs
@@ -38,6 +38,7 @@ time = { version = "0.3.20", default-features = false }
 # optional
 instant = { version = "0.1.12", optional = true }
 libc = { version = "0.2.137", optional = true, default-features = false }
+libm = { version = "0.2.6", optional = true }
 spin_sleep = { version = "1.1.1", optional = true }
 
 

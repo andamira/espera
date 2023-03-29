@@ -28,20 +28,16 @@ pub use ::time::Instant;
 
 pub mod calendar;
 mod macros;
+mod timecode;
 mod unix;
 
 #[doc(inline)]
 pub use calendar::{Month, Weekday};
-pub use unix::{UnixTime32, UnixTime};
+pub use timecode::*;
+pub use unix::{UnixTime, UnixTime32};
 
 #[cfg(feature = "std")]
 #[cfg_attr(feature = "nightly", doc(cfg(feature = "std")))]
 mod sleeper;
 #[cfg(feature = "std")]
 pub use sleeper::Sleeper;
-
-#[cfg(feature = "std")]
-#[cfg_attr(feature = "nightly", doc(cfg(feature = "std")))]
-mod timecode;
-#[cfg(feature = "std")]
-pub use timecode::{timecode_f64, timecode_ns_u64};
