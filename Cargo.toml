@@ -32,15 +32,14 @@ wasm = ["instant"]
 
 
 [dependencies]
-log = "0.4.17"
 time = { version = "0.3.20", default-features = false }
+# log = "0.4"
 
 # optional
 instant = { version = "0.1.12", optional = true }
 libc = { version = "0.2.137", optional = true, default-features = false }
 spin_sleep = { version = "1.1.1", optional = true }
 
-[dev-dependencies]
 
 [badges]
 maintenance = { status = "experimental" }
