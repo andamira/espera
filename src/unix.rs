@@ -11,42 +11,42 @@
 use crate::calendar::{is_leap_year, Month};
 use core::fmt;
 
-/// 64-bit Unix time, supports negative values.
+/// 64-bit Unix time, supporting negative values.
 ///
 /// Stores number of seconds since the Unix Epoch (`1970-01-01 00:00:00 UTC`).
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, PartialOrd, Ord)]
-pub struct UnixTime64 {
+pub struct UnixTime {
     pub seconds: i64,
 }
 
-/// 32-bit Unix time, supports only non-negative values.
+/// 32-bit Unix time, supporting only non-negative values.
 ///
 /// Stores number of seconds since the Unix Epoch (`1970-01-01 00:00:00 UTC`).
 ///
-/// It can represent time from 1970-01-01_00:00:00 to 2106-02-07_06:28:15.
+/// It can represent time from `1970-01-01_00:00:00` to `2106-02-07_06:28:15`.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, PartialOrd, Ord)]
 pub struct UnixTime32 {
     pub seconds: u32,
 }
 
-impl UnixTime64 {
-    /// Returns a new `UnixTime64` from the given amount of seconds.
+impl UnixTime {
+    /// Returns a new `UnixTime` from the given amount of seconds.
     ///
     /// # Examples
     /// ```
-    /// use espera::UnixTime64;
+    /// use espera::UnixTime;
     ///
-    /// assert_eq!["1970-01-01_00:00:01", UnixTime64::new(1).to_string()];
-    /// assert_eq!["1969-12-31_23:59:59", UnixTime64::new(-1).to_string()];
-    /// assert_eq!["2038-01-19_03:14:07", UnixTime64::new(i32::MAX as i64).to_string()];
-    /// assert_eq!["2106-02-07_06:28:15", UnixTime64::new(u32::MAX as i64).to_string()];
-    /// assert_eq!["1833-11-24_17:31:45", UnixTime64::new(u32::MAX as i64 * -1).to_string()];
+    /// assert_eq!["1970-01-01_00:00:01", UnixTime::new(1).to_string()];
+    /// assert_eq!["1969-12-31_23:59:59", UnixTime::new(-1).to_string()];
+    /// assert_eq!["2038-01-19_03:14:07", UnixTime::new(i32::MAX as i64).to_string()];
+    /// assert_eq!["2106-02-07_06:28:15", UnixTime::new(u32::MAX as i64).to_string()];
+    /// assert_eq!["1833-11-24_17:31:45", UnixTime::new(u32::MAX as i64 * -1).to_string()];
     /// ```
     pub fn new(seconds: i64) -> Self {
         Self { seconds }
     }
 
-    /// Returns a new `UnixTime64` anchored to the current second.
+    /// Returns a new `UnixTime` anchored to the current second.
     #[cfg(any(
         feature = "std",
         all(not(feature = "std"), not(feature = "safe"), feature = "libc")
@@ -64,14 +64,14 @@ impl UnixTime64 {
         }
     }
 
-    /// Returns an `UnixTime64` decomposed in `(years, months, days, hours, minutes, seconds)`.
+    /// Returns a `UnixTime` converted to `(year, month, day, hour, minute, second)`.
     ///
     /// # Examples
     /// ```
-    /// use espera::UnixTime64;
+    /// use espera::UnixTime;
     ///
-    /// assert_eq![(1970, 1, 1, 0, 0, 1), UnixTime64::new(1).to_ymdhms()];
-    /// assert_eq![(1969, 12, 31, 23, 59, 59), UnixTime64::new(-1).to_ymdhms()];
+    /// assert_eq![(1970, 1, 1, 0, 0, 1), UnixTime::new(1).to_ymdhms()];
+    /// assert_eq![(1969, 12, 31, 23, 59, 59), UnixTime::new(-1).to_ymdhms()];
     /// ```
     pub const fn to_ymdhms(&self) -> (i32, u8, u8, u8, u8, u8) {
         let seconds_per_minute: u32 = 60;
@@ -143,7 +143,7 @@ impl UnixTime64 {
 }
 
 // private functions
-impl UnixTime64 {
+impl UnixTime {
     // Returns the number of seconds since `1970-01-01 00:00:00 UTC`.
     #[cfg(feature = "std")]
     fn unix_time_64() -> i64 {
@@ -200,7 +200,7 @@ impl UnixTime32 {
         }
     }
 
-    /// Returns an `UnixTime32` decomposed in `(years, months, days, hours, minutes, seconds)`.
+    /// Returns a `UnixTime32` converted to `(year, month, day, hour, minute, second)`.
     ///
     /// # Examples
     /// ```
@@ -281,7 +281,7 @@ impl UnixTime32 {
     }
 }
 
-impl fmt::Display for UnixTime64 {
+impl fmt::Display for UnixTime {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let (y, m, d, h, min, s) = self.to_ymdhms();
         write![f, "{y:04}-{m:02}-{d:02}_{h:02}:{min:02}:{s:02}"]
