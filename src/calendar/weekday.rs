@@ -307,7 +307,7 @@ impl Weekday {
     ///
     /// # Examples
     /// ```
-    /// use espera::Weekday;
+    /// use espera::calendar::Weekday;
     ///
     /// assert_eq![Weekday::Thursday.emoji(), '⚡'];
     /// ```
@@ -336,7 +336,7 @@ impl Weekday {
     ///
     /// # Examples
     /// ```
-    /// use espera::Weekday;
+    /// use espera::calendar::Weekday;
     ///
     /// assert_eq![Weekday::Thursday.planet(), '♃'];
     /// ```
@@ -365,7 +365,7 @@ impl Weekday {
     ///
     /// # Examples
     /// ```
-    /// use espera::Weekday;
+    /// use espera::calendar::Weekday;
     ///
     /// assert_eq![Weekday::Thursday.planet_name(), "Jupiter"];
     /// ```

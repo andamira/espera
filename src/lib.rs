@@ -20,24 +20,45 @@ compile_error!("You can't enable the `std` and `no-std` features at the same tim
 extern crate alloc;
 
 /// (re-exported from the [`time`][::time] crate).
-pub use ::time::Duration;
+pub use time::Duration;
 
 /// (re-exported from the [`time`][::time] crate).
 #[cfg(feature = "std")]
-pub use ::time::Instant;
+pub use time::Instant;
 
 pub mod calendar;
+pub mod error;
+pub mod unix;
+
 mod macros;
 mod timecode;
-mod unix;
-
-#[doc(inline)]
-pub use calendar::{Month, Weekday};
-pub use timecode::*;
-pub use unix::{UnixTime, UnixTime32};
 
 #[cfg(feature = "std")]
 #[cfg_attr(feature = "nightly", doc(cfg(feature = "std")))]
-mod sleeper;
+pub mod looper;
 #[cfg(feature = "std")]
-pub use sleeper::Sleeper;
+#[cfg_attr(feature = "nightly", doc(cfg(feature = "std")))]
+pub mod rate;
+#[cfg(feature = "std")]
+#[cfg_attr(feature = "nightly", doc(cfg(feature = "std")))]
+pub mod sleeper;
+
+/// Everything is directly available in here.
+pub mod all {
+    #[doc(inline)]
+    pub use super::{
+        calendar::{Month, Weekday},
+        error::*,
+        timecode::*,
+        unix::{UnixTime, UnixTime32},
+        Duration,
+    };
+    #[doc(inline)]
+    #[cfg(feature = "std")]
+    pub use super::{
+        looper::{LoopStatus, Looper},
+        rate::{Rate, RateStats},
+        sleeper::Sleeper,
+        Instant,
+    };
+}

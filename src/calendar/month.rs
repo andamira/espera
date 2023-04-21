@@ -296,7 +296,7 @@ impl Month {
     ///
     /// # Examples
     /// ```
-    /// use espera::Month;
+    /// use espera::calendar::Month;
     ///
     /// assert_eq![Month::July.zodiac_start(), '♋'];
     /// ```
@@ -336,7 +336,7 @@ impl Month {
     ///
     /// # Examples
     /// ```
-    /// use espera::Month;
+    /// use espera::calendar::Month;
     ///
     /// assert_eq![Month::July.zodiac_start_name(), "Cancer"];
     /// ```
@@ -363,7 +363,7 @@ impl Month {
     ///
     /// # Examples
     /// ```
-    /// use espera::Month;
+    /// use espera::calendar::Month;
     ///
     /// assert_eq![Month::July.zodiac_end(), '♌'];
     /// ```
@@ -378,7 +378,7 @@ impl Month {
     ///
     /// # Examples
     /// ```
-    /// use espera::Month;
+    /// use espera::calendar::Month;
     ///
     /// assert_eq![Month::July.zodiac_end_name(), "Leo"];
     /// ```

@@ -5,7 +5,8 @@
 // - https://doc.rust-lang.org/std/time/struct.SystemTime.html
 // - https://www.gnu.org/software/libc/manual/html_node/Getting-the-Time.html
 // - https://www.gnu.org/software/libc/manual/html_node/Time-Functions-Example.html
-//!
+//
+//! Unix time.
 //
 
 use crate::calendar::{is_leap_year, Month};
@@ -34,7 +35,7 @@ impl UnixTime {
     ///
     /// # Examples
     /// ```
-    /// use espera::UnixTime;
+    /// use espera::all::UnixTime;
     ///
     /// assert_eq!["1970-01-01_00:00:01", UnixTime::new(1).to_string()];
     /// assert_eq!["1969-12-31_23:59:59", UnixTime::new(-1).to_string()];
@@ -68,7 +69,7 @@ impl UnixTime {
     ///
     /// # Examples
     /// ```
-    /// use espera::UnixTime;
+    /// use espera::all::UnixTime;
     ///
     /// assert_eq![(1970, 1, 1, 0, 0, 1), UnixTime::new(1).to_ymdhms()];
     /// assert_eq![(1969, 12, 31, 23, 59, 59), UnixTime::new(-1).to_ymdhms()];
@@ -173,7 +174,7 @@ impl UnixTime32 {
     ///
     /// # Examples
     /// ```
-    /// use espera::UnixTime32;
+    /// use espera::all::UnixTime32;
     ///
     /// assert_eq!["1970-01-01_00:00:00", UnixTime32::new(0).to_string()];
     /// assert_eq!["2106-02-07_06:28:15", UnixTime32::new(u32::MAX).to_string()];
@@ -204,7 +205,7 @@ impl UnixTime32 {
     ///
     /// # Examples
     /// ```
-    /// use espera::UnixTime32;
+    /// use espera::all::UnixTime32;
     ///
     /// assert_eq![(1970, 1, 1, 0, 0, 1), UnixTime32::new(1).to_ymdhms()];
     /// assert_eq![(2038, 1, 19, 3, 14, 7), UnixTime32::new(i32::MAX as u32).to_ymdhms()];

@@ -1,6 +1,6 @@
 // espera::sleeper
 //
-//!
+//! Sleep control.
 //
 
 use spin_sleep::{SpinSleeper, SpinStrategy};
@@ -55,15 +55,15 @@ impl Sleeper {
     pub fn accuracy(&self) -> Duration {
         return Duration::nanoseconds(self.sleeper.native_accuracy_ns().into());
 
-        #[cfg(feature = "wasm")]
-        todo![]
+        // #[cfg(feature = "wasm")]
+        // todo![]
     }
     /// Returns the accuracy of the native yielding sleep method, in nanoseconds.
     pub fn accuracy_ns(&self) -> u32 {
         return self.sleeper.native_accuracy_ns();
 
-        #[cfg(feature = "wasm")]
-        todo![]
+        // #[cfg(feature = "wasm")]
+        // todo![]
     }
 
     // Convenience constructor for the platform-dependant inner sleeper.

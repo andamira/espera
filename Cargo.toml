@@ -1,9 +1,9 @@
 [package]
 name = "espera"
-description = "time management"
+description = "Time management, loop rates control."
 version = "0.1.0"
 edition = "2021"
-rust-version = "1.64.0"
+rust-version = "1.63" # in sync with CI
 authors = ["José Luis Cruz <joseluis@andamira.net>"]
 repository = "https://github.com/andamira/espera"
 documentation = "https://docs.rs/espera"
@@ -15,28 +15,34 @@ include = [
 	"/README.md",
 ]
 categories = ["date-and-time", "no-std"]
-keywords = ["time", "timecode", "sleep", "calendar"]
+keywords = ["time", "sleep", "loop", "rate", "fps"]
 publish = true
 
 
 [features]
 default = ["safe", "std"]
 #
-std = ["alloc", "time/std", "spin_sleep"]
+std = ["alloc", "ahash", "arraydeque", "sixbit", "time/std", "spin_sleep"]
 alloc = []
 no-std = ["libm"]
 #
 safe = []
+#
 nightly = [] # just for docs
-wasm = ["instant"]
+# wasm = ["instant"]
 
 
 [dependencies]
 time = { version = "0.3.20", default-features = false }
+log = "0.4"
+
 # optional
-instant = { version = "0.1.12", optional = true }
+ahash = { version = "0.8.2", optional = true }
+arraydeque = { version = "0.4.5", optional = true }
+# instant = { version = "0.1.12", optional = true }
 libc = { version = "0.2.137", optional = true, default-features = false }
 libm = { version = "0.2.6", optional = true }
+sixbit = { version = "0.5.0", optional = true }
 spin_sleep = { version = "1.1.1", optional = true }
 
 

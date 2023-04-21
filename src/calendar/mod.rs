@@ -1,6 +1,6 @@
 // espera::calendar
 //
-//!
+//! Month and Weekday types.
 //
 
 mod month;
