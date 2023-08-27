@@ -292,7 +292,7 @@ impl Rate {
     ///
     /// # Precision
     /// This version should give a much more precise average frame rate than
-    /// [`do_tick_fast`][Self::do_tick_fast], because it takes into accout the
+    /// [`do_tick_fast`][Self::do_tick_fast], because it takes into account the
     /// accumulated lag, at the cost of being a little less performant.
     ///
     /// The maximum accumulated lag is ± 2.1 s (±[`i32::MAX`] ns).

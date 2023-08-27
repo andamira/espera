@@ -230,14 +230,14 @@ impl Looper {
     ///
     /// # Precision
     /// This version should give a much more precise average frame rate than
-    /// [`do_tick_fast`][Self::do_tick_fast], because it takes into accout the
+    /// [`do_tick_fast`][Self::do_tick_fast], because it takes into account the
     /// accumulated lag, at the cost of being a little less performant.
     ///
     /// The maximum lag taken into account is ± 2.1 s (±[`i32::MAX`] ns).
-    pub fn do_tick(&mut self, now: Instant, name: &str) -> Option<Duration> {
+    pub fn do_tick(&mut self, instant: Instant, name: &str) -> Option<Duration> {
         if let Ok(key) = name.chars().encode_sixbit::<u128>() {
             if let Some(rate) = self.rates.get_mut(&key) {
-                if let Some(delta) = rate.do_tick(now) {
+                if let Some(delta) = rate.do_tick(instant) {
                     // stats
                     if let Some(stats) = self.stats.get_mut(&key) {
                         let ns: u64 = delta.whole_nanoseconds() as u64;
@@ -279,10 +279,10 @@ impl Looper {
     /// This version is less precise than [`do_tick`][Self::do_tick],
     /// because it doesn't try to compensate accumulated lag. It will probably
     /// lag a little behind the target rate, but should also be a little faster.
-    pub fn do_tick_fast(&mut self, now: Instant, name: &str) -> Option<Duration> {
+    pub fn do_tick_fast(&mut self, instant: Instant, name: &str) -> Option<Duration> {
         if let Ok(key) = name.chars().encode_sixbit::<u128>() {
             if let Some(rate) = self.rates.get_mut(&key) {
-                if let Some(delta) = rate.do_tick_fast(now) {
+                if let Some(delta) = rate.do_tick_fast(instant) {
                     // stats
                     if let Some(stats) = self.stats.get_mut(&key) {
                         let ns: u64 = delta.whole_nanoseconds() as u64;

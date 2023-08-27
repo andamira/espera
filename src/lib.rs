@@ -23,10 +23,10 @@ devela::deprecate_feature![old: "no-std", new: "no_std", since: "0.3.0"];
 #[cfg(feature = "alloc")]
 extern crate alloc;
 
-/// (re-exported from the [`time`][::time] crate).
+/// (re-exported from the [`time`] crate).
 pub use time::Duration;
 
-/// (re-exported from the [`time`][::time] crate).
+/// (re-exported from the [`time`] crate).
 #[cfg(feature = "std")]
 pub use time::Instant;
 
