@@ -50,13 +50,13 @@ impl UnixTime {
     /// Returns a new `UnixTime` anchored to the current second.
     #[cfg(any(
         feature = "std",
-        all(not(feature = "std"), not(feature = "safe"), feature = "libc")
+        all(not(feature = "std"), feature = "unsafe", feature = "libc")
     ))]
     #[cfg_attr(
         feature = "nightly",
         doc(cfg(any(
             feature = "std",
-            all(feature = "no-std", feature = "non-safe", feature = "libc")
+            all(feature = "no_std", feature = "unsafe", feature = "libc")
         )))
     )]
     pub fn now() -> Self {
@@ -159,7 +159,7 @@ impl UnixTime {
     // Returns the number of seconds since 1970-01-01 00:00:00 UTC.
     //
     // Because of `u32` this will only work until `06:28:15 UTC on 07 February 2106`.
-    #[cfg(all(not(feature = "std"), not(feature = "safe"), feature = "libc"))]
+    #[cfg(all(not(feature = "std"), feature = "unsafe", feature = "libc"))]
     fn unix_time_64() -> i64 {
         // https://docs.rs/libc/latest/libc/fn.time.html
         #[allow(clippy::unnecessary_cast)] // could be i32 in other platforms?
@@ -186,13 +186,13 @@ impl UnixTime32 {
     /// Returns a new `UnixTime32` anchored to the current second.
     #[cfg(any(
         feature = "std",
-        all(not(feature = "std"), not(feature = "safe"), feature = "libc")
+        all(not(feature = "std"), feature = "unsafe", feature = "libc")
     ))]
     #[cfg_attr(
         feature = "nightly",
         doc(cfg(any(
             feature = "std",
-            all(feature = "no-std", feature = "non-safe", feature = "libc")
+            all(feature = "no_std", feature = "unsafe", feature = "libc")
         )))
     )]
     pub fn now() -> Self {
@@ -276,7 +276,7 @@ impl UnixTime32 {
     // Returns the number of seconds since 1970-01-01 00:00:00 UTC.
     //
     // Because of `u32` this will only work until `06:28:15 UTC on 07 February 2106`.
-    #[cfg(all(not(feature = "std"), not(feature = "safe"), feature = "libc"))]
+    #[cfg(all(not(feature = "std"), feature = "unsafe", feature = "libc"))]
     fn unix_time_32() -> u32 {
         unsafe { libc::time(core::ptr::null_mut()).clamp(0, u32::MAX as i64) as u32 }
     }

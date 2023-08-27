@@ -13,8 +13,12 @@
 #![cfg_attr(feature = "safe", forbid(unsafe_code))]
 #![cfg_attr(feature = "nightly", feature(doc_cfg))]
 
-#[cfg(all(feature = "std", feature = "no-std"))]
-compile_error!("You can't enable the `std` and `no-std` features at the same time.");
+#[cfg(all(feature = "std", feature = "no_std"))]
+compile_error!("You can't enable the `std` and `no_std` features at the same time.");
+#[cfg(all(feature = "safe", feature = "unsafe"))]
+compile_error!("You can't enable the `safe` and `unsafe` features at the same time.");
+
+devela::deprecate_feature![old: "no-std", new: "no_std", since: "0.3.0"];
 
 #[cfg(feature = "alloc")]
 extern crate alloc;
