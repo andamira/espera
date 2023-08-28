@@ -3,13 +3,10 @@
 //! Sleep control.
 //
 
+use crate::all::{Duration, Instant};
 use spin_sleep::{SpinSleeper, SpinStrategy};
 
-use crate::Duration;
-
-use crate::Instant;
-
-/// Sleep control structure.
+/// A sleep manager.
 #[derive(Clone, Copy, Debug, Default)]
 pub struct Sleeper {
     //

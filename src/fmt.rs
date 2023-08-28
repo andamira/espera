@@ -1,6 +1,6 @@
-// espera::timecode
+// espera::fmt
 //
-//!
+//! Formatting.
 //
 
 #[cfg(feature = "alloc")]

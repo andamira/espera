@@ -23,46 +23,26 @@ devela::deprecate_feature![old: "no-std", new: "no_std", since: "0.3.0"];
 #[cfg(feature = "alloc")]
 extern crate alloc;
 
-/// (re-exported from the [`time`] crate).
-pub use time::Duration;
-
-/// (re-exported from the [`time`] crate).
-#[cfg(feature = "std")]
-pub use time::Instant;
-
 pub mod calendar;
 pub mod error;
-pub mod unix;
-
-mod macros;
-mod timecode;
+pub mod fmt;
+pub mod time;
 
 #[cfg(feature = "std")]
 #[cfg_attr(feature = "nightly", doc(cfg(feature = "std")))]
-pub mod looper;
-#[cfg(feature = "std")]
-#[cfg_attr(feature = "nightly", doc(cfg(feature = "std")))]
-pub mod rate;
-#[cfg(feature = "std")]
-#[cfg_attr(feature = "nightly", doc(cfg(feature = "std")))]
-pub mod sleeper;
+pub mod control;
 
-/// Everything is directly available in here.
+/// All items are reexported here.
 pub mod all {
     #[doc(inline)]
     pub use super::{
         calendar::{Month, Weekday},
         error::*,
-        timecode::*,
-        unix::{UnixTime, UnixTime32},
-        Duration,
+        fmt::*,
+        time::*,
     };
+
     #[doc(inline)]
     #[cfg(feature = "std")]
-    pub use super::{
-        looper::{LoopStatus, Looper},
-        rate::{Rate, RateStats},
-        sleeper::Sleeper,
-        Instant,
-    };
+    pub use super::control::*;
 }

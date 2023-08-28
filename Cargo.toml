@@ -23,6 +23,7 @@ publish = true
 default = ["std"]
 
 # environment features
+# (not enabling "std" declares the library as "no_std")
 std = [ # features that depend on the standard library
 	"alloc",
 	"ahash",
@@ -32,7 +33,7 @@ std = [ # features that depend on the standard library
 	"spin_sleep"
 ]
 alloc = [] # features that depend on allocation
-no_std = ["libm"] # features incompatible with "std"
+no_std = ["libm"] # features incompatible with the standard library
 
 # safety features
 safe = [] # forbid unsafe at the crate level
@@ -42,7 +43,11 @@ unsafest = ["unsafe", "devela/unsafest"] # enable unsafe recursively
 
 # nightly features
 nightly = [] # used only for enhanced documentation
-nightly_docs = ["nightly", "std"] # features for docs.rs
+nightly_docs = [ # features for docs.rs
+	"nightly",
+	"std",
+	"devela/nightly_docs"
+]
 
 # other features
 # wasm = ["instant"]

@@ -3,7 +3,7 @@
 //!
 //
 
-use crate::{Duration, Instant};
+use crate::all::{Duration, Instant};
 
 /// A rate allows to control a periodic repetition in time.
 ///

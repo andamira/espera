@@ -3,25 +3,19 @@
 //! Loop manager with support for multiple rates.
 //
 
-use crate::{Duration, Instant};
-
+use crate::all::{Duration, EsperaResult, Instant, Rate, RateStats};
 use ahash::AHashMap;
-
+use sixbit::{DecodeSixbit, EncodeSixbit};
 use std::thread::sleep;
 
-use sixbit::DecodeSixbit;
-use sixbit::EncodeSixbit;
-
-use crate::all::{EsperaResult, Rate, RateStats};
-
-/// The status for the loop state machine.
+/// The status of a given [`Looper`].
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum LoopStatus {
     Active,
     Asleep,
 }
 
-/// A loop manager state machine.
+/// A loop manager that supports multiple [`Rate`]s.
 #[derive(Clone, Debug)]
 pub struct Looper {
     /// The loop status.

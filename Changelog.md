@@ -9,14 +9,19 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ### Added
 - new features: `safest`, `unsafe`, `unsafest`, `nightly_docs`.
+- new modules: `time`, `fmt`.
 - add `devela` dependency.
 - add `check.sh` script.
 
+### Removed
+- remove the `sleep4` macro, move to `devela` crate.
+
 ### Changed
 - bump MSRV to `1.72.0`.
-- rename `no-std` feature to `no_std`.
-- deprecate `no-std` feature.
 - require `unsafe` instead of `not(safe)`.
+- deprecate and rename `no-std` feature to `no_std`.
+- move the `unix` and `timecode` modules to `time` and hide.
+- reexport `timecode_*` fns in `fmt`.
 
 ### Fixed
 - update dependencies: `time`, `ahash`, `libc`, `libm`.

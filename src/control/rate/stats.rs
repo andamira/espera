@@ -3,7 +3,7 @@
 //!
 //
 
-use crate::{all::Rate, Duration};
+use crate::all::{Duration, Rate};
 use arraydeque::{ArrayDeque, Wrapping};
 use core::cmp;
 
@@ -18,7 +18,7 @@ const NS_TO_S: f64 = 1e-9;
 // const S_TO_MS: f64 = 1e+3;
 // const MS_TO_S: f64 = 1e-3;
 
-/// Statistics for a given Rate.
+/// The statistics of a given [`Rate`].
 ///
 /// Average
 #[derive(Clone, Debug)]
