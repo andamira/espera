@@ -1,7 +1,7 @@
 [package]
 name = "espera"
 description = "Time management, loop rates control."
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
 rust-version = "1.72.0" # sync with readme, check.sh & .github/workflows/check.yml
 authors = ["José Luis Cruz <joseluis@andamira.net>"]
@@ -14,7 +14,7 @@ include = [
 	"/LICENSE-*",
 	"/README.md",
 ]
-categories = ["date-and-time", "no_std"]
+categories = ["date-and-time", "no-std"]
 keywords = ["time", "sleep", "loop", "rate", "fps"]
 publish = true
 
@@ -56,7 +56,7 @@ nightly_docs = [ # features for docs.rs
 [dependencies]
 devela = { version = "0.8.0", default-features = false }
 time = { version = "0.3.28", default-features = false }
-log = "0.4"
+log = "0.4.20"
 
 # optional
 ahash = { version = "0.8.3", optional = true }

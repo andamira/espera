@@ -7,6 +7,8 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ## [Unreleased]
 
+## [0.3.0] - 2023-08-29
+
 ### Added
 - new features: `safest`, `unsafe`, `unsafest`, `nightly_docs`.
 - new modules: `time`, `fmt`.
@@ -102,7 +104,10 @@ The format is based on [Keep a Changelog], and this project adheres to
 - `Sleeper` struct, `sleep4` macro, `timecode_f64` and `timecode_ns_u64` functions.
 
 
-[unreleased]: https://github.com/andamira/espera/compare/v0.2.0...HEAD
+[unreleased]: https://github.com/andamira/espera/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/andamira/espera/releases/tag/v0.3.0
+[0.2.0]: https://github.com/andamira/espera/releases/tag/v0.2.0
+[0.2.0]: https://github.com/andamira/espera/releases/tag/v0.2.0
 [0.1.0]: https://github.com/andamira/espera/releases/tag/v0.1.0
 [0.0.5]: https://github.com/andamira/espera/releases/tag/v0.0.5
 [0.0.4]: https://github.com/andamira/espera/releases/tag/v0.0.4
