@@ -7,6 +7,8 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ## [Unreleased]
 
+## [0.4.0] - 2023-09-09
+
 ### Added
 - new features: `full`, `full_std`, `full_no_std`.
 - add `full_std` and `unsafe` to `nightly_docs`.
@@ -116,7 +118,8 @@ The format is based on [Keep a Changelog], and this project adheres to
 - `Sleeper` struct, `sleep4` macro, `timecode_f64` and `timecode_ns_u64` functions.
 
 
-[unreleased]: https://github.com/andamira/espera/compare/v0.3.0...HEAD
+[unreleased]: https://github.com/andamira/espera/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/andamira/espera/releases/tag/v0.4.0
 [0.3.0]: https://github.com/andamira/espera/releases/tag/v0.3.0
 [0.2.0]: https://github.com/andamira/espera/releases/tag/v0.2.0
 [0.2.0]: https://github.com/andamira/espera/releases/tag/v0.2.0
