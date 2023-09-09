@@ -7,6 +7,18 @@ The format is based on [Keep a Changelog], and this project adheres to
 
 ## [Unreleased]
 
+### Added
+- new features: `full`, `full_std`, `full_no_std`.
+- add `full_std` and `unsafe` to `nightly_docs`.
+
+### Changed
+- remove `std` from default features.
+- bump `devela`.
+
+## Fixed
+- refactor manifest, update comments.
+- add safety comments.
+
 ## [0.3.0] - 2023-08-29
 
 ### Added
