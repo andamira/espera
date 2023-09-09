@@ -24,6 +24,9 @@ publish = true
 
 #* capability features *#
 default = []
+full = [] # enables optional capabilities in this crate (unused)
+full_std = ["full", "std"]
+full_no_std = ["full", "no_std", "libc"]
 
 #* environment features *#
 std = [ # disables `no_std` compatibility and enables `std` functionality
@@ -36,14 +39,15 @@ no_std = ["libm"] # enables functionality incompatible with `std`
 
 #* safety features *#
 unsafest = ["unsafe", "devela/unsafest"] # enables unsafe recursively
-unsafe = [] # enables unsafe features in this crate (unused)
+unsafe = [] # enables unsafe features in this crate
+	# used together with `libc` for `no_std` unixtime (IMPROVE)
 safe = [] # forbids unsafe in this crate
 safest = ["safe", "devela/safest"] # forbids unsafe recursively
 
 #* nightly features *#
 nightly = [] # enables nightly features
 nightly_docs = [ # enables features for docs.rs
-	"nightly", "std", "devela/nightly_docs",
+	"nightly", "full_std", "unsafe", "devela/nightly_docs",
 ]
 
 # ------------------------------------------------------------------------------
