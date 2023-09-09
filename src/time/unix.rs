@@ -163,6 +163,7 @@ impl UnixTime {
     fn unix_time_64() -> i64 {
         // https://docs.rs/libc/latest/libc/fn.time.html
         #[allow(clippy::unnecessary_cast)] // could be i32 in other platforms?
+        // SAFETY: safe since we pass a null pointer and do not dereference anything.
         unsafe {
             libc::time(core::ptr::null_mut()) as i64
         }
@@ -278,6 +279,7 @@ impl UnixTime32 {
     // Because of `u32` this will only work until `06:28:15 UTC on 07 February 2106`.
     #[cfg(all(not(feature = "std"), feature = "unsafe", feature = "libc"))]
     fn unix_time_32() -> u32 {
+        // SAFETY: safe since we pass a null pointer and do not dereference anything.
         unsafe { libc::time(core::ptr::null_mut()).clamp(0, u32::MAX as i64) as u32 }
     }
 }
