@@ -18,57 +18,54 @@ categories = ["date-and-time", "no-std"]
 keywords = ["time", "sleep", "loop", "rate", "fps"]
 publish = true
 
+# ------------------------------------------------------------------------------
 
 [features]
 
+#* capability features *#
 default = []
 
-# environment features
-# (not enabling "std" declares the library as "no_std")
-std = [ # features that depend on the standard library
+#* environment features *#
+std = [ # disables `no_std` compatibility and enables `std` functionality
 	"alloc",
-	"ahash",
-	"arraydeque",
-	"sixbit",
-	"time/std",
-	"spin_sleep"
+	"ahash", "arraydeque", "sixbit", "time/std", "spin_sleep",
 ]
-alloc = [] # features that depend on allocation
-no_std = ["libm"] # features incompatible with the standard library
-
-# safety features
-safe = [] # forbid unsafe at the crate level
-safest = ["safe", "devela/safest"] # forbid unsafe recursively
-unsafe = [] # all the unsafe features
-unsafest = ["unsafe", "devela/unsafest"] # enable unsafe recursively
-
-# nightly features
-nightly = [] # used only for enhanced documentation
-nightly_docs = [ # features for docs.rs
-	"nightly",
-	"std",
-	"devela/nightly_docs"
-]
-
-# other features
+alloc = [] # enables `alloc` functionality
+no_std = ["libm"] # enables functionality incompatible with `std`
 # wasm = ["instant"]
 
+#* safety features *#
+unsafest = ["unsafe", "devela/unsafest"] # enables unsafe recursively
+unsafe = [] # enables unsafe features in this crate (unused)
+safe = [] # forbids unsafe in this crate
+safest = ["safe", "devela/safest"] # forbids unsafe recursively
+
+#* nightly features *#
+nightly = [] # enables nightly features
+nightly_docs = [ # enables features for docs.rs
+	"nightly", "std", "devela/nightly_docs",
+]
+
+# ------------------------------------------------------------------------------
 
 [dependencies]
 devela = "0.9.0"
 time = { version = "0.3.28", default-features = false }
 log = "0.4.20"
 
-# optional
+#* optional dependencies *#
+# std:
 ahash = { version = "0.8.3", optional = true }
 arraydeque = { version = "0.4.5", optional = true }
-# instant = { version = "0.1.12", optional = true }
-libc = { version = "0.2", optional = true, default-features = false }
-libm = { version = "0.2.7", optional = true }
 sixbit = { version = "0.5.0", optional = true }
 spin_sleep = { version = "1.1.1", optional = true }
+# no_std:
+libc = { version = "0.2", optional = true, default-features = false }
+libm = { version = "0.2.7", optional = true }
+# wasm:
+# instant = { version = "0.1.12", optional = true }
 
-[dev-dependencies]
+# ------------------------------------------------------------------------------
 
 [package.metadata.docs.rs]
 no-default-features = true
